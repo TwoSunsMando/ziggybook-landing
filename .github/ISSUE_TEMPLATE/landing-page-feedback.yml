@@ -1,0 +1,68 @@
+name: "Landing Page Feedback"
+description: "Share your thoughts on the ZiggyBook landing page draft"
+title: "Feedback: "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reviewing the ZiggyBook landing page! Your feedback helps us build the best possible first impression.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "What area is this about?"
+      options:
+        - "Design (colors, fonts, spacing, visual feel)"
+        - "Copy (headlines, descriptions, wording)"
+        - "Layout (page structure, sections, flow)"
+        - "Add something (a feature or section that's missing)"
+        - "Remove something (something that shouldn't be there)"
+        - "General / Other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: section
+    attributes:
+      label: "Which section of the page?"
+      options:
+        - "Navigation bar"
+        - "Hero (main headline area)"
+        - "Social proof strip (stats)"
+        - "Features grid"
+        - "How it works"
+        - "Pricing"
+        - "Waitlist signup / CTA"
+        - "Footer"
+        - "Overall / whole page"
+    validations:
+      required: true
+
+  - type: textarea
+    id: feedback
+    attributes:
+      label: "What's your feedback?"
+      description: "Be specific — what do you like, what should change, and why?"
+      placeholder: "e.g., The headline is good but 'Works While You Do' doesn't immediately tell me what the product does..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: importance
+    attributes:
+      label: "How important is this?"
+      options:
+        - "Must fix before launch"
+        - "Should fix if we can"
+        - "Nice to have"
+    validations:
+      required: true
+
+  - type: input
+    id: reviewer
+    attributes:
+      label: "Your name"
+      placeholder: "So we know who said what"
+    validations:
+      required: false
