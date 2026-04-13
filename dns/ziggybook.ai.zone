@@ -1,0 +1,106 @@
+;; ============================================================================
+;; ziggybook.ai DNS zone file (BIND format) — for Cloudflare import
+;; ============================================================================
+;;
+;; Purpose:  Add Resend email sending + DMARC + CAA records to ziggybook.ai.
+;;           Existing A @ and CNAME www records are NOT included — Cloudflare
+;;           already has them pointing to the DigitalOcean droplet. Importing
+;;           this file is ADDITIVE and will not overwrite them.
+;;
+;; How to import (Cloudflare):
+;;   1. Go to https://dash.cloudflare.com → ziggybook.ai → DNS → Records
+;;   2. Click the "..." menu (top right) → "Import and Export"
+;;   3. Click "Import DNS records" → upload this file
+;;   4. Review the preview, then click Import
+;;
+;; BEFORE you import:
+;;   1. Open https://resend.com/domains, click "Add Domain", enter "ziggybook.ai"
+;;   2. Resend will show you 3 or 4 DNS records unique to your account.
+;;      Copy those values into the placeholders below — search for the string
+;;      "FROM_RESEND_DASHBOARD" and replace each one.
+;;   3. Save this file, then import.
+;;
+;; AFTER you import:
+;;   1. Go back to Resend → Domains → ziggybook.ai → click "Verify"
+;;   2. Propagation usually takes 2-5 min on Cloudflare
+;;   3. Once verified, you can send from noreply@ziggybook.ai (or any
+;;      address on this domain)
+;;
+;; IMPORTANT Cloudflare notes:
+;;   - DKIM records (resend._domainkey) MUST be "DNS only" (gray cloud).
+;;     Cloudflare's proxy breaks DKIM signatures. If any record below has a
+;;     comment "PROXY=OFF", flip the orange cloud to gray after import.
+;;   - Cloudflare import does NOT preserve proxy settings from comments —
+;;     you'll need to toggle them manually in the Records tab.
+;; ============================================================================
+
+$ORIGIN ziggybook.ai.
+$TTL 3600
+
+;; ---------------------------------------------------------------------------
+;; RESEND — email sending (required to send from any @ziggybook.ai address)
+;; ---------------------------------------------------------------------------
+;; All three records below come from the Resend dashboard when you add the
+;; domain. Region and DKIM key are unique per account — fill them in.
+;; PROXY=OFF for all DKIM records.
+
+;; MX record for bounce handling. The subdomain "send" and region suffix are
+;; set by Resend — do not change. Replace the region if Resend gives you a
+;; different one (us-east-1 is typical).
+send               3600    IN  MX   10  feedback-smtp.us-east-1.amazonses.com.
+
+;; SPF record on the "send" subdomain (authorizes Resend/Amazon SES to send)
+send               3600    IN  TXT  "v=spf1 include:amazonses.com ~all"
+
+;; DKIM public key. The selector "resend" is fixed; the value is a long
+;; base64-encoded public key from your Resend dashboard. PROXY=OFF.
+;; NOTE: Resend's dashboard shows only the "p=..." portion — don't add
+;; a "v=DKIM1; k=rsa;" prefix. Their verifier looks for the string as-is.
+resend._domainkey  3600    IN  TXT  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDXj/f+3BKd5DJGR1RfxalSvBxTsH/urBm+YPBT1Crgb6zqtSpfLN50ifNn2cNfLPdmZlbhr0V96LO/0BNFmQJszqeFxzuoBBkeNK2DsaxEoaDXrCGlQgq6QNyifFZ0sTeeofPg6PHK3/9OWgw990hBBdT809IHHdEi15JmFKBKtQIDAQAB"
+
+;; ---------------------------------------------------------------------------
+;; DMARC — policy for how receivers should treat mail claiming to be from us
+;; ---------------------------------------------------------------------------
+;; Start with p=none (monitoring only). After a week of clean reports, you
+;; can tighten to p=quarantine, then p=reject. rua is the aggregate report
+;; address — change to whatever email you want to receive DMARC reports at.
+
+_dmarc             3600    IN  TXT  "v=DMARC1; p=none; rua=mailto:dmarc-reports@astridagent.ai; ruf=mailto:dmarc-reports@astridagent.ai; fo=1; adkim=s; aspf=s"
+
+;; ---------------------------------------------------------------------------
+;; CAA — restrict which CAs can issue SSL certificates for this domain
+;; ---------------------------------------------------------------------------
+;; Cloudflare uses Let's Encrypt + Google Trust Services for Universal SSL.
+;; Locking to these two prevents rogue CAs from issuing certs for ziggybook.ai.
+
+@                  3600    IN  CAA  0 issue "letsencrypt.org"
+@                  3600    IN  CAA  0 issue "pki.goog"
+@                  3600    IN  CAA  0 issuewild "letsencrypt.org"
+@                  3600    IN  CAA  0 issuewild "pki.goog"
+@                  3600    IN  CAA  0 iodef "mailto:dan@astridagent.ai"
+
+;; ---------------------------------------------------------------------------
+;; GOOGLE WORKSPACE — inbound email at @ziggybook.ai (OPTIONAL, commented out)
+;; ---------------------------------------------------------------------------
+;; Uncomment and import these if/when you set up Google Workspace for
+;; ziggybook.ai (e.g. so info@ziggybook.ai receives mail).
+;; Google Workspace has a setup flow that will give you the exact values —
+;; do that in Google Admin, then come back and fill these in.
+
+; @                  3600    IN  MX   1   smtp.google.com.
+
+;; Google Workspace domain verification (TXT) — ACTIVE. Added when Dan
+;; started setting up Google Workspace for ziggybook.ai. Stays on the
+;; domain permanently to re-verify ownership.
+@                  3600    IN  TXT  "google-site-verification=yNM205wtXFp2sRXvLfysjDUsqqgB1oXeAXpEouTNxBc"
+
+;; Google's official SPF (if you want @ziggybook.ai to send via Gmail too,
+;; you'd need to combine this with Resend's SPF into a single record — not
+;; two. Don't uncomment this unless you're NOT using Resend for the apex.)
+; @                  3600    IN  TXT  "v=spf1 include:_spf.google.com ~all"
+
+;; ---------------------------------------------------------------------------
+;; ALREADY IN CLOUDFLARE (do not re-add — listed here for reference only)
+;; ---------------------------------------------------------------------------
+;; @                  3600    IN  A     159.203.174.128   ; Droplet, PROXY=ON
+;; www                3600    IN  CNAME ziggybook.ai.      ; Landing page alias
