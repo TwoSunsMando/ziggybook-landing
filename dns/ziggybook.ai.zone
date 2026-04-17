@@ -65,7 +65,7 @@ resend._domainkey  3600    IN  TXT  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDXj
 ;; can tighten to p=quarantine, then p=reject. rua is the aggregate report
 ;; address — change to whatever email you want to receive DMARC reports at.
 
-_dmarc             3600    IN  TXT  "v=DMARC1; p=none; rua=mailto:dmarc-reports@astridagent.ai; ruf=mailto:dmarc-reports@astridagent.ai; fo=1; adkim=s; aspf=s"
+_dmarc             3600    IN  TXT  "v=DMARC1; p=none; rua=mailto:dsteiner@astridagent.ai; ruf=mailto:dsteiner@astridagent.ai; fo=1; adkim=s; aspf=s"
 
 ;; ---------------------------------------------------------------------------
 ;; CAA — restrict which CAs can issue SSL certificates for this domain
