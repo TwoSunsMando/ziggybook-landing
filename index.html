@@ -591,50 +591,6 @@
     }
     .footer-links a:hover { color: var(--text-primary); }
 
-    /* ── Draft watermark ── */
-    .draft-banner {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 200;
-      padding: 12px 16px;
-      background: rgba(255, 176, 32, 0.95);
-      color: var(--bg-primary);
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      backdrop-filter: blur(8px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .draft-banner a {
-      color: var(--bg-primary);
-      text-decoration: underline;
-    }
-    .draft-banner .feedback-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 18px;
-      background: var(--bg-primary);
-      color: var(--amber);
-      border: none;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .draft-banner .feedback-btn:hover {
-      background: #1a2332;
-      transform: translateY(-1px);
-    }
-
     /* ── Responsive ── */
     @media (max-width: 640px) {
       .hero { padding: 130px 0 72px; }
@@ -650,12 +606,6 @@
 <body>
 
 <div class="bg-glow"></div>
-
-<!-- ── DRAFT BANNER ── -->
-<div class="draft-banner">
-  <span>DRAFT — Internal Review Only</span>
-  <a href="https://github.com/TwoSunsMando/ziggybook-landing/issues/new?template=landing-page-feedback.yml" target="_blank" class="feedback-btn">Leave Feedback →</a>
-</div>
 
 <!-- ── NAV ── -->
 <nav>
@@ -850,6 +800,9 @@
       <div class="footer-copy">&copy; 2026 AstridAgent AI LLC. All rights reserved.</div>
     </div>
     <div class="footer-links">
+      <a href="/sms-consent">SMS Consent</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
       <a href="mailto:info@astridagent.ai">Contact</a>
     </div>
   </div>
