@@ -303,6 +303,100 @@
       padding: 36px 32px;
       transition: all 0.3s;
     }
+
+    /* ── try-ziggy section (live SMS opt-in) ── */
+    .try-ziggy {
+      padding: 96px 24px 64px;
+      background: linear-gradient(180deg, var(--bg-card) 0%, transparent 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .try-ziggy-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+      box-shadow: 0 12px 48px rgba(0, 212, 255, 0.06);
+    }
+    .try-ziggy-pill {
+      font-size: 13px;
+      color: var(--text-dim);
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .try-ziggy-pill strong {
+      color: var(--cyan);
+      letter-spacing: 1.2px;
+      padding: 2px 8px;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.18);
+      border-radius: 4px;
+      margin-right: 4px;
+    }
+    .try-ziggy-number {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(28px, 5vw, 38px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      padding: 16px 28px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-bright);
+      border-radius: 12px;
+      transition: all 0.2s;
+      margin: 4px 0 20px;
+    }
+    .try-ziggy-number:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .try-ziggy-disclosure {
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .try-ziggy-disclosure a {
+      color: var(--text-dim);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .try-ziggy-disclosure a:hover {
+      color: var(--cyan);
+    }
+    .try-ziggy-explainer {
+      max-width: 640px;
+      margin: 48px auto 0;
+      text-align: center;
+    }
+    .try-ziggy-explainer h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .try-ziggy-explainer p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-dim);
+    }
+    .placeholder-copy {
+      color: var(--amber) !important;
+      background: rgba(255, 176, 32, 0.06);
+      border: 1px dashed rgba(255, 176, 32, 0.3);
+      border-radius: 8px;
+      padding: 14px 18px;
+    }
+
     .feature-card:hover {
       background: var(--bg-card-hover);
       border-color: rgba(0, 212, 255, 0.15);
@@ -611,21 +705,42 @@
 <nav>
   <div class="container">
     <a href="#" class="logo">Ziggy<span>Book</span></a>
-    <a href="#signup" class="nav-cta">Get Early Access</a>
+    <a href="#pricing" class="nav-cta">See Pricing</a>
   </div>
 </nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
   <div class="container">
-    <div class="badge">Coming Soon</div>
+    <div class="badge">Meet Ziggy — your AI booking assistant</div>
     <h1>The Back Office That <span class="highlight">Works While You Do</span></h1>
     <p class="hero-sub">
-      ZiggyBook handles your scheduling, customers, quoting, and invoicing — so you can stay on the job, not behind a desk.
+      ZiggyBook answers your customers, books jobs, sends quotes and reminders, and chases invoices — all over text, so you stay on the job, not behind a desk.
     </p>
     <div class="hero-cta-group">
-      <a href="#signup" class="btn-primary">Join the Waitlist →</a>
-      <a href="#features" class="btn-secondary">See Features</a>
+      <a href="#try-ziggy" class="btn-primary">Text Ziggy now →</a>
+      <a href="#pricing" class="btn-secondary">See pricing</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRY ZIGGY ── (live SMS opt-in evidence — content reviewed by Twilio campaign vetting) -->
+<section class="try-ziggy" id="try-ziggy">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">See it work</span>
+      <h2>See Ziggy in action — text it yourself</h2>
+    </div>
+    <div class="try-ziggy-card">
+      <p class="try-ziggy-pill">Text <strong>DEMO</strong> to</p>
+      <a href="sms:+19414226811?body=DEMO" class="try-ziggy-number">(941) 422-6811</a>
+      <p class="try-ziggy-disclosure">
+        By texting ZiggyBook at (941) 422-6811 you agree to receive conversational and informational messages from ZiggyBook, operated by AstridAgent AI LLC. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="/sms-consent">SMS Consent Policy</a> and <a href="/privacy">Privacy Policy</a>.
+      </p>
+    </div>
+    <div class="try-ziggy-explainer">
+      <h3>How your customers reach you</h3>
+      <p>Customers text your ZiggyBook number &mdash; printed on your truck, yard sign, card, or Google profile &mdash; or scan your QR code. That first text opts them in, and Ziggy takes it from there. They can reply STOP anytime to opt out.</p>
     </div>
   </div>
 </section>
@@ -742,7 +857,7 @@
           <li>Automated reminders</li>
           <li>Basic reporting</li>
         </ul>
-        <a href="#signup" class="btn-secondary">Join Waitlist</a>
+        <a href="#signup" class="btn-secondary">Get started</a>
       </div>
       <div class="price-card featured">
         <div class="price-tier">Crew</div>
@@ -756,7 +871,7 @@
           <li>Revenue tracking</li>
           <li>Priority support</li>
         </ul>
-        <a href="#signup" class="btn-primary">Join Waitlist</a>
+        <a href="#signup" class="btn-primary">Get started →</a>
       </div>
       <div class="price-card">
         <div class="price-tier">Empire</div>
@@ -770,7 +885,7 @@
           <li>Owner dashboard</li>
           <li>Dedicated support</li>
         </ul>
-        <a href="#signup" class="btn-secondary">Join Waitlist</a>
+        <a href="#signup" class="btn-secondary">Get started</a>
       </div>
     </div>
   </div>
@@ -780,13 +895,13 @@
 <section class="cta-section" id="signup">
   <div class="container">
     <div class="cta-box">
-      <h2>Be First in Line</h2>
-      <p>ZiggyBook is launching soon. Get early access and lock in founder pricing.</p>
+      <h2>Lock in founder pricing</h2>
+      <p>First customers lock in founder pricing for the life of their account. Drop your email and we'll send your onboarding link and pricing details.</p>
       <form class="signup-form" onsubmit="handleSignup(event)">
         <input type="email" placeholder="you@email.com" required aria-label="Email address">
-        <button type="submit">Get Early Access</button>
+        <button type="submit">Lock it in →</button>
       </form>
-      <p class="signup-note">No spam. We'll only email you when we launch.</p>
+      <p class="signup-note">No spam. Just your onboarding link and pricing details.</p>
     </div>
   </div>
 </section>
@@ -803,7 +918,7 @@
       <a href="/sms-consent">SMS Consent</a>
       <a href="/privacy">Privacy</a>
       <a href="/terms">Terms</a>
-      <a href="mailto:info@astridagent.ai">Contact</a>
+      <a href="/contact">Contact</a>
     </div>
   </div>
 </footer>
@@ -819,7 +934,7 @@ function handleSignup(e) {
   btn.style.background = 'var(--amber)';
   input.disabled = true;
   btn.disabled = true;
-  console.log('Waitlist signup:', email);
+  console.log('Founder pricing signup:', email);
 }
 </script>
 
