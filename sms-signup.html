@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start texting with Ziggy · ZiggyBook</title>
+  <meta name="description" content="Opt in to receive booking, quote, reminder, and invoice text messages from ZiggyBook (operated by AstridAgent AI LLC).">
+  <meta name="robots" content="index,follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/policy-style.css">
+  <style>
+    /* Form-specific styles layered on top of policy-style.css so the
+       sign-up page reads as part of the same product family as the
+       policy pages. */
+    .signup-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: 14px;
+      padding: 28px 28px 24px;
+      margin: 24px 0 16px;
+    }
+    .signup-card label.field-label {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .signup-card input[type="tel"] {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-bright);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-family: "Inter", sans-serif;
+      font-size: 17px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .signup-card input[type="tel"]:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.18);
+    }
+    .signup-card .consent-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 22px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .signup-card .consent-row input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+    .signup-card .consent-text {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .signup-card .links-row {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .signup-card .links-row a {
+      margin-right: 14px;
+    }
+    .signup-card button[type="submit"] {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, var(--cyan), var(--amber));
+      color: var(--bg-primary);
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.02em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.05s;
+    }
+    .signup-card button[type="submit"]:hover:not(:disabled) {
+      opacity: 0.92;
+    }
+    .signup-card button[type="submit"]:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+    .signup-card button[type="submit"]:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .alt-path {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+    .alt-path a { font-weight: 500; }
+    .success-card,
+    .error-card {
+      display: none;
+      padding: 22px 24px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+    .success-card {
+      background: rgba(0, 212, 255, 0.06);
+      border: 1px solid rgba(0, 212, 255, 0.35);
+    }
+    .success-card h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: var(--cyan);
+    }
+    .error-card {
+      background: rgba(255, 176, 32, 0.06);
+      border: 1px solid rgba(255, 176, 32, 0.35);
+    }
+    .error-card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: var(--amber);
+    }
+    .is-shown { display: block !important; }
+    .is-hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="mast">
+      <div class="logo-mark">Z</div>
+      <div class="wordmark">Ziggy<span class="accent">Book</span></div>
+    </header>
+
+    <div class="eyebrow">SMS Sign-up</div>
+    <h1>Start texting with Ziggy</h1>
+    <p>Enter your mobile number and Ziggy will text you to get started.</p>
+
+    <!-- Form posts JSON to the FastAPI opt-in endpoint. JS enhances UX
+         (disable submit until consent is checked, in-page success state),
+         but the form structure, consent copy, and links are visible
+         without JS so a compliance reviewer with scripts disabled still
+         sees the full consent record. -->
+    <form id="signup-form"
+          class="signup-card"
+          action="https://api.astridagent.ai/api/sms-opt-in"
+          method="POST"
+          novalidate>
+
+      <label class="field-label" for="phone">Mobile number</label>
+      <input type="tel"
+             id="phone"
+             name="phone"
+             autocomplete="tel"
+             inputmode="tel"
+             placeholder="(555) 123-4567"
+             required>
+
+      <!-- biz is populated from the ?biz=<slug> query param by the script
+           below. Backend treats it as optional; absent biz means
+           generic ZiggyBook onboarding. -->
+      <input type="hidden" id="biz" name="biz" value="">
+
+      <!-- consent_text is sent with the submission so the backend records
+           the exact wording the customer agreed to (TCR / CTIA best
+           practice — a screenshot of the page is fine, but having the
+           exact string on file with the consent timestamp is stronger). -->
+      <input type="hidden" name="consent_text" value="I agree to receive recurring automated and conversational text messages from ZiggyBook (operated by AstridAgent AI LLC) at the number provided — for booking, quotes, appointment reminders, and invoices. Message frequency varies. Message and data rates may apply. Consent is not a condition of purchase. Reply STOP to opt out, HELP for help.">
+
+      <div class="consent-row">
+        <input type="checkbox"
+               id="consent"
+               name="consent"
+               value="agreed"
+               required>
+        <label for="consent" class="consent-text">
+          I agree to receive recurring automated and conversational text messages
+          from ZiggyBook (operated by AstridAgent AI LLC) at the number provided
+          &mdash; for booking, quotes, appointment reminders, and invoices.
+          Message frequency varies. Message and data rates may apply. Consent
+          is not a condition of purchase. Reply <span class="mono">STOP</span>
+          to opt out, <span class="mono">HELP</span> for help.
+        </label>
+      </div>
+
+      <div class="links-row">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">SMS Terms</a>
+      </div>
+
+      <button type="submit" id="submit-btn" disabled>Text me to start</button>
+    </form>
+
+    <div class="success-card" id="success-card" role="status" aria-live="polite">
+      <h2>You're in &mdash; Ziggy will text you shortly.</h2>
+      <p>If you don't see anything within a few minutes, check that your number was entered correctly, or email <a href="mailto:support@astridagent.ai">support@astridagent.ai</a>.</p>
+    </div>
+
+    <div class="error-card" id="error-card" role="alert">
+      <h2>Hmm, something went wrong.</h2>
+      <p id="error-message">Please try again, or email <a href="mailto:support@astridagent.ai">support@astridagent.ai</a> and we'll get you set up.</p>
+    </div>
+
+    <p class="alt-path">
+      Prefer to text first? <a href="sms:+19414226811?body=DEMO">Text DEMO to (941) 422-6811</a> instead.
+    </p>
+
+    <footer class="foot">
+      <a href="/">ZiggyBook</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="/sms-consent">SMS Consent</a>
+      <span style="margin-left: auto;">&copy; 2026 AstridAgent AI LLC</span>
+    </footer>
+  </div>
+
+  <script>
+    // Progressive enhancement: page is fully readable without this script.
+    // What it does:
+    //   1. Reads ?biz=<slug> from the URL and sets the hidden biz input.
+    //   2. Toggles the submit button's disabled state based on the
+    //      consent checkbox (HTML5 `required` is the no-JS fallback).
+    //   3. Hijacks form submit to POST JSON, then swaps the form for an
+    //      in-page success card so the user stays on /sms-signup.
+    (function () {
+      var form = document.getElementById('signup-form');
+      var phoneInput = document.getElementById('phone');
+      var bizInput = document.getElementById('biz');
+      var consentBox = document.getElementById('consent');
+      var submitBtn = document.getElementById('submit-btn');
+      var successCard = document.getElementById('success-card');
+      var errorCard = document.getElementById('error-card');
+      var errorMessage = document.getElementById('error-message');
+
+      // Carry ?biz=<slug> through to the backend so Ziggy can greet
+      // the customer for the right business and attribute the lead.
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var biz = params.get('biz');
+        if (biz) {
+          bizInput.value = biz.trim().slice(0, 64);
+        }
+      } catch (e) {
+        // Older browser or weird URL — fail silent, biz stays empty.
+      }
+
+      function syncSubmitState() {
+        submitBtn.disabled = !consentBox.checked;
+      }
+      consentBox.addEventListener('change', syncSubmitState);
+      syncSubmitState();
+
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        if (!consentBox.checked) return;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+
+        var payload = {
+          phone: phoneInput.value.trim(),
+          biz: bizInput.value || null,
+          consent: 'agreed',
+          consent_text: form.querySelector('input[name="consent_text"]').value,
+          page_url: window.location.href
+        };
+
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'omit'
+        }).then(function (res) {
+          if (!res.ok) {
+            return res.text().then(function (text) {
+              throw new Error('HTTP ' + res.status + (text ? ': ' + text.slice(0, 200) : ''));
+            });
+          }
+          form.classList.add('is-hidden');
+          successCard.classList.add('is-shown');
+        }).catch(function (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Text me to start';
+          errorCard.classList.add('is-shown');
+          if (err && err.message) {
+            // Keep the surfaced detail short — no stack traces in the UI.
+            errorMessage.textContent = 'Please try again. (' + err.message + ')';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
