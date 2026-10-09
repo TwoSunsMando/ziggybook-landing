@@ -639,6 +639,9 @@
       font-size: 0.8rem;
       color: var(--text-muted);
     }
+    .signup-form .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+    .signup-status { min-height: 1.4em; margin-top: 12px; font-size: 0.9rem; color: var(--text-secondary); }
+    .signup-status.is-error { color: var(--amber); }
 
     /* ── Footer ── */
     footer {
@@ -900,10 +903,20 @@
     <div class="cta-box">
       <h2>Lock in founder pricing</h2>
       <p>First customers lock in founder pricing for the life of their account. Drop your email and we'll send your onboarding link and pricing details.</p>
-      <form class="signup-form" onsubmit="handleSignup(event)">
-        <input type="email" placeholder="you@email.com" required aria-label="Email address">
+      <form class="signup-form" id="waitlist-form"
+            action="https://api.astridagent.ai/api/waitlist" method="POST"
+            onsubmit="handleSignup(event)">
+        <input type="email" name="email" placeholder="you@email.com" required
+               autocomplete="email" maxlength="254" aria-label="Email address">
+        <!-- Honeypot: humans never see or fill this. Not a phone field. -->
+        <div class="hp" aria-hidden="true">
+          <label for="wl-website">Website</label>
+          <input type="text" id="wl-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <input type="hidden" name="source" value="landing-founder-pricing">
         <button type="submit">Lock it in →</button>
       </form>
+      <p class="signup-status" id="signup-status" role="status" aria-live="polite"></p>
       <p class="signup-note">No spam. Just your onboarding link and pricing details.</p>
     </div>
   </div>
@@ -927,17 +940,68 @@
 </footer>
 
 <script>
+// Founder-pricing signup → POST /api/waitlist (smartbook-api v0.25.0).
+// "You're on the list!" shows ONLY after the API confirms the save (2xx).
+// Without fetch (very old browsers) the form's own action= POST runs.
 function handleSignup(e) {
+  if (!window.fetch) return;
   e.preventDefault();
-  const input = e.target.querySelector('input');
-  const email = input.value;
-  // Placeholder — wire up to real backend later
-  const btn = e.target.querySelector('button');
-  btn.textContent = 'You\'re on the list!';
-  btn.style.background = 'var(--amber)';
+  var form = e.target;
+  var input = form.querySelector('input[name="email"]');
+  var btn = form.querySelector('button[type="submit"]');
+  var status = document.getElementById('signup-status');
+  var label = 'Lock it in →';
+
+  var params = new URLSearchParams(window.location.search);
+  var utm = {};
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function (k) {
+    var v = params.get(k);
+    if (v) utm[k] = v.slice(0, 100);
+  });
+
+  var payload = {
+    email: input.value.trim(),
+    source: (form.querySelector('input[name="source"]') || {}).value || 'landing-founder-pricing',
+    utm: utm,
+    page_url: window.location.href.slice(0, 512),
+    website: (form.querySelector('input[name="website"]') || {}).value || ''
+  };
+
   input.disabled = true;
   btn.disabled = true;
-  console.log('Founder pricing signup:', email);
+  btn.textContent = 'Saving…';
+  status.textContent = '';
+  status.classList.remove('is-error');
+
+  function fail(message) {
+    input.disabled = false;
+    btn.disabled = false;
+    btn.textContent = label;
+    status.textContent = message;
+    status.classList.add('is-error');
+  }
+
+  fetch(form.action, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    credentials: 'omit'
+  }).then(function (res) {
+    if (res.ok) {
+      btn.textContent = 'You\'re on the list!';
+      btn.style.background = 'var(--amber)';
+      return;
+    }
+    if (res.status === 422) {
+      fail('That email doesn\'t look right. Please check it and try again.');
+    } else if (res.status === 429) {
+      fail('Too many tries. Please wait a few minutes and try again.');
+    } else {
+      fail('We couldn\'t save that just now. Please try again, or email support@astridagent.ai.');
+    }
+  }).catch(function () {
+    fail('We couldn\'t save that just now. Please try again, or email support@astridagent.ai.');
+  });
 }
 </script>
 
