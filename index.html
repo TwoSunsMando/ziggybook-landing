@@ -611,6 +611,8 @@
     }
     .signup-form input::placeholder { color: var(--text-muted); }
     .signup-form input:focus { border-color: var(--cyan); }
+    .signup-form input:focus-visible { box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.35); }
+    .signup-label { display: block; margin: 0 auto 8px; max-width: 440px; text-align: left; font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); }
     .signup-form button {
       padding: 14px 28px;
       background: linear-gradient(135deg, var(--cyan) 0%, #00B8D9 100%);
@@ -715,7 +717,7 @@
       ZiggyBook answers your customers by text and by phone with Ziggy's Voice Agent. It books jobs, sends quotes, and sends invoices, so you stay on the job, not behind a desk.
     </p>
     <div class="hero-cta-group">
-      <a href="#try-ziggy" class="btn-primary">Text Ziggy now →</a>
+      <a href="#try-ziggy" class="btn-secondary">Text Ziggy now →</a>
       <a href="#pricing" class="btn-secondary">See pricing</a>
     </div>
   </div>
@@ -843,7 +845,7 @@
     <div class="section-header">
       <span class="section-label">Pricing</span>
       <h2>Simple, Flat Pricing</h2>
-      <p>No per-user fees. No add-on creep.</p>
+      <p>No per-user fees. No add-on creep. Cancel anytime.</p>
     </div>
     <div class="pricing-grid">
       <div class="price-card">
@@ -853,7 +855,7 @@
         <ul class="price-features">
           <li>1 tech</li>
           <li>Ziggy by text and by phone (Voice Agent)</li>
-          <li>Includes a monthly AI allowance</li>
+          <li>Includes a monthly AI allowance (details at launch)</li>
           <li>Dedicated business number</li>
           <li>Smart scheduling</li>
           <li>Customer management</li>
@@ -887,17 +889,18 @@
     <div class="cta-box">
       <h2>Get early access</h2>
       <p>ZiggyBook is opening to a small group of lawn-care and landscape crews first. Join the list and we'll email you when a spot opens.</p>
+      <label class="signup-label" for="wl-email">Email address</label>
       <form class="signup-form" id="waitlist-form"
             action="https://api.astridagent.ai/api/waitlist" method="POST"
             onsubmit="handleSignup(event)">
-        <input type="email" name="email" placeholder="you@email.com" required
-               autocomplete="email" maxlength="254" aria-label="Email address">
+        <input type="email" id="wl-email" name="email" placeholder="you@email.com" required
+               autocomplete="email" maxlength="254">
         <!-- Honeypot: humans never see or fill this. Not a phone field. -->
         <div class="hp" aria-hidden="true">
           <label for="wl-website">Website</label>
           <input type="text" id="wl-website" name="website" tabindex="-1" autocomplete="off">
         </div>
-        <input type="hidden" name="source" value="landing-founder-pricing">
+        <input type="hidden" name="source" value="landing-early-access">
         <button type="submit">Join the list →</button>
       </form>
       <p class="signup-status" id="signup-status" role="status" aria-live="polite"></p>
@@ -945,7 +948,7 @@ function handleSignup(e) {
 
   var payload = {
     email: input.value.trim(),
-    source: (form.querySelector('input[name="source"]') || {}).value || 'landing-founder-pricing',
+    source: (form.querySelector('input[name="source"]') || {}).value || 'landing-early-access',
     utm: utm,
     page_url: window.location.href.slice(0, 512),
     website: (form.querySelector('input[name="website"]') || {}).value || ''
