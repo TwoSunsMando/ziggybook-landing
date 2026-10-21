@@ -12,6 +12,7 @@ COPY privacy.html /usr/share/nginx/html/privacy.html
 COPY terms.html /usr/share/nginx/html/terms.html
 COPY contact.html /usr/share/nginx/html/contact.html
 COPY policy-style.css /usr/share/nginx/html/policy-style.css
+COPY help/ /usr/share/nginx/html/help/
 EXPOSE 80
 # Container health = nginx answers / (busybox wget; no curl in alpine).
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
